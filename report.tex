@@ -1,0 +1,84 @@
+\documentclass[11pt, a4paper, oneside]{scrbook}
+
+\usepackage[english]{babel}
+
+\usepackage[]{handout}
+\usepackage{scrhack}
+
+\title{Quantum Cellular Automata}
+\subtitle{NIUS Physics (Batch 20) \\ Mid-Term Report \\ Camp: 20.2}
+\author{
+    Piyush Kumar Singh\thanks{\mailto{pks22ms027@iiserkol.ac.in}} \\ {\large IISER Kolkata} 
+    \and
+    % Rhythm Anand\thanks{\mailto{rhythm.anand@students.iiserpune.ac.in}} \\ {\large IISER Pune}
+    % \and
+    Sambuddha Sanyal\thanks{\mailto{sambuddha.sanyal@iisertirupati.ac.in}} \\ {\large IISER Tirupati}
+}
+\date{\today}
+
+\changemaincolor{Emerald}
+\changesecondcolor{Periwinkle}
+
+% \usepackage{biblatex}
+\addbibresource{references.bib}
+
+\hypersetup{
+    pdftitle={Quantum Cellular Automata},
+    pdfauthor={Piyush Kumar Singh, Rhythm Anand, Sambuddha Sanyal},
+    pdfkeywords={physics, cellular automata, quantum cellular automata, thermalization}
+}
+
+\begin{document}
+\frontmatter
+\begin{titlepage}
+    \let\newpage\relax%
+    \singhtitle
+\end{titlepage}
+
+\chapter*{Acknowledgement}
+\addcontentsline{toc}{chapter}{Acknowledgement}
+
+{\large\noindent
+    This work was supported by the National Initiative on Undergraduate Science (NIUS) undertaken
+    by the Homi Bhabha Centre for Science Education, Tata Institute of Fundamental Research
+    (HBCSE-TIFR), Mumbai, India. We acknowledge the support of the Department of Atomic
+    Energy, Govt. Of India, under Project Identification No. RTI4001.}
+
+\tableofcontents
+
+\mainmatter
+
+\chapter{Introduction}
+
+% \lipsum[1]\cite{Hadeler2017}
+
+Cellular automata are discrete mathematical models used to simulate complex systems. John von Neumann first introduced the concept \cite{Neumann1966} in 1966. In 1970, an article written by Martin Gardner \cite{Gardner1970} introduces us to a compelling use case of this abstract concept, ``The Game of Life,'' invented by J. H. Conway.
+
+% In classical cellular automata, the system is divided into discrete cells arranged in a grid. Each cell can be in one of a finite number of states. The state of a cell is typically updated over discrete time steps according to a set of rules based on the states of its neighboring cells.
+
+In a conference in 1982, R. P. Feynman expressed his view (or dream) of using `Quantum Physics' in computers \cite{Feynman1982} to simulate complex physical systems using the idea of density matrix (proposed by Neumann in 1955 \cite{Neumann2018}); building on this idea Feynman introduced the world to a weird collaboration named ``Quantum Cellular Automata'' (QCA) in an article published in 1986 \cite{Feynman1986}.
+
+And there are multiple reasons why we should care about QCAs. First, this is part of a broad field of `Quantum Information Processing,' any development in QCA may help us understand how we can harness quantum properties for computation. Second, the system exhibits some new emergent behaviors in classical cellular automata, so we want to know if we can also have these emergent behaviors in QCAs.
+
+% When this abstract concept is combined with seemingly weird notions of `Quantum Mechanics,' we get Quantum Cellular Automata (QCA).
+\section{Cellular Automata}
+
+\subsection{Locality}
+
+\subsection{Universality}
+\lipsum[3]
+
+\section{Quantum Cellular Automata}
+\lipsum[5-15]
+
+
+\chapter{Random Quantum Circuits}
+
+\appendix
+\chapter{Notations}
+\section{Hello}
+
+\backmatter
+\printbibliography[heading=bibintoc, title=Bibliography]
+
+\end{document}
