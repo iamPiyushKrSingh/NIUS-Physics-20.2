@@ -87,7 +87,8 @@
 \newcommand{\plusemail}[1]{\\ \normalfont \mailto{#1}}
 
 %% Formatting commands %%
-\newcommand{\vocab}[1]{\texttt{\color{retropink} #1}}
+\newcommand{\impt}[1]{\textsc{#1}}
+\newcommand{\vocab}[1]{\texttt{\color{red} #1}}
 \providecommand{\alert}{\vocab}
 \newcommand{\note}[1]{\textcolor{Navy}{\textbf{\emph{Note: }}#1}}
 
@@ -632,6 +633,7 @@
         citecolor=retrocyan,
         breaklinks=true
     }
+    \usepackage[nameinlink]{cleveref}
 \fi
 
 
@@ -765,10 +767,10 @@
 \@ifundefined{KOMAClassName}%
 {} % do nothing outside KOMA class
 {% If KOMA exists. . .
-    % \addtokomafont{title}{\merri}
+    \addtokomafont{title}{\huge}
     \setkomafont{subtitle}{\Large\merri}
     \setkomafont{author}{\Large\scshape}
-    \setkomafont{date}{\large}
+    \setkomafont{date}{\Large}
 }
 \providecommand{\thetitle}{\@title}
 \providecommand{\theauthor}{\@author}
@@ -786,6 +788,7 @@
 
 \usepackage{caption}
 \renewcommand{\thefigure}{\arabic{figure}}
+\renewcommand{\thetable}{\arabic{table}}
 \renewcommand{\figureautorefname}{Fig.}
 \renewcommand{\equationautorefname}{Eq\textsuperscript{n}}
 \DeclareCaptionStyle{sexy}[justification=centering,indention=0pt]{font={small},labelfont={sf,bf},width=0.7\textwidth}
