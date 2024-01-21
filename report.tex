@@ -1,9 +1,11 @@
-\documentclass[11pt, a4paper, oneside]{scrbook}
+\documentclass[11pt, oneside]{scrbook}
 
 \usepackage[english]{babel}
 
 \usepackage[]{handout}
 \usepackage{scrhack}
+
+\graphicspath{{images/}}
 
 \title{Quantum Cellular Automata}
 \subtitle{NIUS Physics (Batch 20) \\ Mid-Term Report \\ Camp: 20.2}
@@ -58,10 +60,44 @@ Cellular automata are discrete mathematical models used to simulate complex syst
 
 In a conference in 1982, R. P. Feynman expressed his view (or dream) of using `Quantum Physics' in computers \cite{Feynman1982} to simulate complex physical systems using the idea of density matrix (proposed by Neumann in 1955 \cite{Neumann2018}); building on this idea Feynman introduced the world to a weird collaboration named ``Quantum Cellular Automata'' (QCA) in an article published in 1986 \cite{Feynman1986}.
 
-And there are multiple reasons why we should care about QCAs. First, this is part of a broad field of `Quantum Information Processing,' any development in QCA may help us understand how we can harness quantum properties for computation. Second, the system exhibits some new emergent behaviors in classical cellular automata, so we want to know if we can also have these emergent behaviors in QCAs.
+And there are multiple reasons why we should care about QCAs. First, this is part of a broad field of `Quantum Information Processing,' any development in QCA may help us understand how we can harness quantum properties for computation. Second, the classical systems exhibit some new emergent behaviors, so we want to know if we can also have these emergent behaviors in QCAs.
 
 % When this abstract concept is combined with seemingly weird notions of `Quantum Mechanics,' we get Quantum Cellular Automata (QCA).
 \section{Cellular Automata}
+
+A cellular automaton (CA) is a group of ``colored'' cells on a predetermined-shaped grid that follows a set of rules depending on nearby cell states to evolve over many discrete time steps. After that, the rules are applied repeatedly for as many time steps as needed.
+
+It turned out that reaction-diffusion systems, biological pattern development, fluid flows, and traffic models are only a few real-world uses for CAs. Lattice gas cellular automata are a specific type of CA used to simulate fluid dynamics. The Navier-Stokes equation can be recovered by selecting the appropriate model. Lattice Boltzmann models have taken their place, using continuous functions at the lattice locations rather than discrete variables. More aspirationally, CAs have been proposed as discrete physics models with many desirable characteristics, such as dynamical homogeneity and localization. But, while this is a fascinating idea, physics is ultimately quantum, and CAs cannot adequately represent, e.g., Bell inequality violation, which occurs from quantum entanglement.
+
+Before giving a formal definition, let's look at an example:
+\begin{example}[Rule Number 110]
+    Consider a one-dimensional array of bits (\ie cells having two states, namely `0' or `1'). The update rule of a bit is dependent on the initial state of that bit as well as the state of its neighboring bits. The rule can be summarized as follows:
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{ | c | c | c | c | c | c | c | c | c | }
+            \hline
+            Initial state of a bit and its neighbours & 111 & 110 & 101 & 100 & 011 & 010 & 001 & 000 \\
+            \hline
+            New state of middle bit                   & 0   & 1   & 1   & 0   & 1   & 1   & 1   & 0   \\
+            \hline
+        \end{tabular}
+    \end{table}
+    We named this update rule as \verb|Rule 110| because if you treat the last row of the table as a binary number, it converts to 110 in the decimal system. This CA can simulate a Turing machine, and it was shown later that this can even be done efficiently (with only polynomial overhead).
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width = 0.7\textwidth]{rule110_cellular_automaton.png}
+        \caption{An example of a CA evolution for the rule 110 CA, with time going up. Bits with value 1 are
+            represented by the yellow squares, while blue squares represent 0.}
+        \label{fig:rule110}
+    \end{figure} \noindent
+
+\end{example}
+
+\begin{definition}[Cellular Automata]
+    A Cellular Automaton is a 4-tuple \(\qty(L, \Sigma, \mathcal{N}, f)\) consisting of a $d$-dimensional lattice of cells indexed by integers, $L = \Z^d$, a finite set $\Sigma$ of cell states, a finite neighborhood scheme $\mathcal{N} \subseteq \Z^d$, and a local transition function $f: \Sigma^{\mathcal{N}} \to \Sigma$.
+\end{definition}
+
+\subsection*{Characteristics of Cellular Automata}
 
 \subsection{Locality}
 

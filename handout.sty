@@ -664,9 +664,18 @@
     }{
         \usepackage[headsepline]{scrlayer-scrpage}
         \renewcommand{\headfont}{}
-        \addtolength{\textheight}{3cm}
+        % \addtolength{\textheight}{3cm}
+        % \addtolength{\textwidth}{2cm}
         \setlength{\footskip}{0.2in}
         \setlength{\headsep}{10pt}
+        \usepackage{geometry}
+        \geometry{
+            left = 1in,
+            right = 1in,
+            bottom = 0.8in,
+            top = 0.8in,
+            a4paper
+        }
         % \ihead{\sffamily\footnotesize\textbf{\theauthor} {\textcolor{\maincolor!80!black}{(\thedate )}}} %% For Header with date
         % \ihead{\sffamily\footnotesize\textbf{\theauthor}} %% For Header with name only
         \ihead{\merri\footnotesize{NIUS Physics}}
