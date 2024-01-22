@@ -18,9 +18,8 @@
     Sambuddha Sanyal\thanks{\mailto{sambuddha.sanyal@iisertirupati.ac.in}} \\ {\large IISER Tirupati}
 }
 \date{
-    \today \\
-    \vspace{5ex}
-    \includegraphics[width = 0.6\textwidth]{quantum-xkcd.png}
+    \today \\[6ex]
+    \includegraphics[width = 0.7\textwidth]{quantum-xkcd.png}
 }
 
 \changemaincolor{Emerald}
@@ -62,9 +61,9 @@
 
 Cellular automata are discrete mathematical models used to simulate complex systems. John von Neumann first introduced the concept \cite{Neumann1966} in 1966. In 1970, an article written by Martin Gardner \cite{Gardner1970} introduces us to a compelling use case of this abstract concept, ``The Game of Life,'' invented by J. H. Conway.
 
-% In classical cellular automata, the system is divided into discrete cells arranged in a grid. Each cell can be in one of a finite number of states. The state of a cell is typically updated over discrete time steps according to a set of rules based on the states of its neighboring cells.
+% In classical cellular automata, the system is divided into discrete cells arranged in a grid. Each cell can be in one of a finite number of states. The state of a cell is typically updated over discrete time steps according to a set of rules based on the states of its neighbouring cells.
 
-In a conference in 1982, R. P. Feynman expressed his view (or dream) of using `Quantum Physics' in computers \cite{Feynman1982} to simulate complex physical systems using the idea of density matrix (proposed by Neumann in 1955 \cite{Neumann2018}); building on this idea Feynman introduced the world to a weird collaboration named ``Quantum Cellular Automata'' (QCA) in an article published in 1986 \cite{Feynman1986}.
+In a conference in 1982, R. P. Feynman expressed his view (or dream) of using `Quantum Physics' in computers \cite{Feynman1982} to simulate complex physical systems using the idea of density matrix (proposed by Neumann in 1955 \cite{Neumann2018}); building on his idea Feynman introduced the world to a weird collaboration named ``Quantum Cellular Automata'' (QCA) in an article published in 1986 \cite{Feynman1986}.
 
 And there are multiple reasons why we should care about QCAs. First, this is part of a broad field of `Quantum Information Processing,' any development in QCA may help us understand how we can harness quantum properties for computation. Second, the classical systems exhibit some new emergent behaviors, so we want to know if we can also have these emergent behaviors in QCAs.
 
@@ -85,7 +84,7 @@ It turned out that reaction-diffusion systems, biological pattern development, f
 Before giving a formal definition, let's look at an example:
 \begin{example}[Rule Number 110]
     \label{eg:rule110}
-    Consider a one-dimensional array of bits (\ie cells having two states, namely `0' or `1'). The update rule of a bit is dependent on the initial state of that bit as well as the state of its neighboring bits. The rule can be summarized as follows:
+    Consider a one-dimensional array of bits (\ie cells having two states, namely `0' or `1'). The update rule of a bit is dependent on the initial state of that bit as well as the state of its neighbouring bits. The rule can be summarized as follows:
     \begin{table}[H]
         \centering
         \begin{tabular}{ | c | c | c | c | c | c | c | c | c | }
@@ -110,7 +109,7 @@ Before giving a formal definition, let's look at an example:
 \end{example}
 
 \begin{definition}[Cellular Automata]
-    A Cellular Automaton is a 4-tuple \(\qty(L, \Sigma, \mathcal{N}, f)\) consisting of a $d$-dimensional lattice of cells indexed by integers, $L = \Z^d$, a finite set $\Sigma$ of cell states, a finite neighborhood scheme $\mathcal{N} \subseteq \Z^d$, and a local transition function $f: \Sigma^{\mathcal{N}} \to \Sigma$.
+    A Cellular Automaton is a 4-tuple \(\qty(L, \Sigma, \mathcal{N}, f)\) consisting of a $d$-dimensional lattice of cells indexed by integers, $L = \Z^d$, a finite set $\Sigma$ of cell states, a finite neighbourhood scheme $\mathcal{N} \subseteq \Z^d$, and a local transition function $f: \Sigma^{\mathcal{N}} \to \Sigma$.
 \end{definition}
 
 % There are a few unique characteristics of this local transition function \(f\). Consider a cell \(x \in L\)
@@ -120,7 +119,7 @@ To better understand this local transition function \(f\), consider a cell \(x \
 
 \begin{itemize}
     \item cellular automata are \vocab{space-homogeneous} \ie the local transition function performs the same function at each cell.
-    \item Also, cellular automata are \vocab{time-homogeneous} \ie the local transition function does not depend on the time step $t$.\footnote{We will review these properties in detail in \cref{ssec: locality,ssec: universality}}
+    \item Also, cellular automata are \vocab{time-homogeneous} \ie the local transition function does not depend on the current time $t$.\footnote{We will review these properties in detail in \cref{ssec: locality,ssec: universality}}
 \end{itemize}
 
 \noindent We can define the current state of the lattice (or CA) as a \emph{configuration} \(C \in \Sigma^{L}\), which has the information about the state of each cell at time \(t\). Now, using this idea, we can define a `\emph{global}' transition function \(F: \Sigma^{L} \to \Sigma^{L}\), which acts on the entire latter rather than on individual cells and spits out another configuration \(C'\) for the lattice at time \(t+1\).
@@ -129,7 +128,25 @@ To better understand this local transition function \(f\), consider a cell \(x \
     Observe the \cref{eg:rule110}; we can fit this scenario in the definition. In this case \(L = \Z\), \(\Sigma = \qty{0, 1}\), for $i^{\text{th}}$ cell \(\mathcal{N} := \qty{i-1,~ i,~ i+1}\) and \(f\) is defined according to the update rule specified in \cref{tab:rule110}.
 \end{remark}
 
+\pagebreak
 \subsection{Characteristics of Cellular Automata}
+
+In the definition and example, we have used a few terms; now we will define them (and these will be the main characteristics of cellular automata):
+\begin{list}{}{}
+    \item[\bfseries Discrete Space-Time:] In our discussion, we have defined the lattice \((L)\) to be \(d\)-dimensional integer space, which makes our area of interest a discrete space. Our evolution to the next state is also discrete since we evolve our states from \(t \to t+1\) (or predefined time steps).
+
+    \item[\bfseries Finite State Set:] The set \(\Sigma\) is finite \ie every cell has only finitely many states of being in. Generally, in classical systems, we have state set \(\Sigma = \qty{0, 1}\), also called `binary cellular automata.'
+
+    \item[\bfseries Cell/Cell-state:] Every space-position vector \(i \in L = \Z^d\) identifies a cell which contains a cell-state \(c_i \in \Sigma\).
+
+    \item[\bfseries Configuration:] A configuration \(C\) is the concatination of all cell-states over the entire lattice \(L\) at a given time \(t\) which means that every configuration is an element of set \(\Sigma^L\).
+
+    \item[\bfseries Local Transition Function:] We know time is also discrete in our system (with a predefined time step). We use a local transition function \(f\) that defines the state of every cell after each time evolution. We refer to this function as a local function, as it only takes the states of the `neighbouring' cells as an argument.
+
+    \item[\bfseries Neighbourhood Scheme:] As we have defined, the outcome of our local function at any cell \(i\) depends on the set of cell-states of neighbouring cells. This set is defined by the neighbourhood scheme \(\mathcal{N}\) on cellular automata.
+
+    \item[\bfseries Global Function:] For a given lattice \(L\) (with a defined neighbourhood scheme), the local transition function \(f\) imposes a global transition function \(F\) on the set of all possible configurations. This global function determines the \emph{space/time} behavior of the cellular automaton on an initial configuration.
+\end{list}
 
 \subsection{Locality} \label{ssec: locality}
 
