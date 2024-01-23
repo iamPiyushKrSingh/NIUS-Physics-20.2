@@ -150,11 +150,19 @@ In the definition and example, we have used a few terms; now we will define them
 
 \subsection{Locality} \label{ssec: locality}
 
+% The word locality has a defined meaning in day-to-day conversations, but here, this locality means something more than that. 
+In physics, locality implies we are talking about the \impt{Principle of Locality}, which states that \uline{an object is influenced directly only by its immediate surroundings}. If a theory that includes this principle is said to be a ``local theory.'' This idea of locality evolved from the classical field theory; building upon this idea, if an event at a point is cause for an effect at another point, a wave or a particle must travel through space-time between the two points, carrying the influence.
+
+Einstein postulated that causal influence couldn't be transmitted between two points faster than the speed of light \(c\), in the \vocab{Special Theory of Relativity}, which means that if two points are spacelike separated, they can't influence each other. % This limit on speed also relates to the locality and causality
+
+In the context of cellular automata, we know that the state of a cell is only influenced by the states of finite neighbours (decided by neighbourhood scheme). Since the state of any cell is influenced by its surroundings, we can say that the cellular automata theory is local.
 \subsection{Universality} \label{ssec: universality}
-\lipsum[3]
+% \lipsum[3]
 
 \section{Quantum Cellular Automata}
-\lipsum[5-15]
+R. P. Feynman introduced the idea of Quantum Cellular Automata with a vision that it can be used to simulate `Quantum Physics' as we don't have a classical analog of many quantum phenomena. In \cite{Watrous1995}, a group of scientists has proven that QCAs are an alternative paradigm of quantum computers. They have shown QCAs to be universal, implying they could efficiently simulate a quantum Turing machine.
+
+This demonstration showed that QCAs are very important for quantum computers, so many have tried to formulate a theory. But there was an enormous challenge in front of the scientists: after some local function has updated one cell, we will lose the information about the state of the cell at time \(t\) as we require it for updating other cells. So somehow, we have to clone the state of this cell to some other cell, but by the \vocab{no-cloning theorem}, it is simply impossible.
 
 
 \chapter{Random Quantum Circuits}
