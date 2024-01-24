@@ -1,10 +1,54 @@
-\documentclass[11pt, oneside]{scrbook}
+\documentclass[11pt, oneside, listof=totoc]{scrbook}
 
 \usepackage[english]{babel}
+\counterwithout{figure}{chapter}
 
 \usepackage[linear]{handout}
 \usepackage{scrhack}
 % \setlist{nosep}
+
+%% Quantum Circuits %% 
+\usepackage{qcircuit}
+
+\usepackage{listings}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\definecolor{identifiercolor}{rgb}{.4,.6,.56}
+\definecolor{stringcolor}{gray}{0.5}
+\definecolor{inactivecolor}{rgb}{0.15,0.15,0.5}
+
+\lstdefinestyle{mystyle}{
+    basicstyle={\fontfamily{fvm}\selectfont},
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle={\bfseries\color{inactivecolor}},
+    stringstyle={\bfseries\color{stringcolor}},
+    identifierstyle={\bfseries\color{identifiercolor}},
+    numberstyle=\tiny\color{codegray},
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\lstdefinestyle{Mathematica}{
+morekeywords=[3]{KroneckerProduct, PauliMatrix, HadamardMatrix}
+}
+
+\renewcommand{\lstlistingname}{Code} % adjusts Listings caption and reference lst
+\renewcommand{\lstlistlistingname}{List of Code Snippets}
 
 %% EULER Fonts %%
 % \usepackage[T1]{fontenc}
@@ -13,8 +57,10 @@
 % \usepackage[boldsans]{ccfonts}
 % \usepackage[euler-digits]{eulervm}
 
+%% Math Macros %%
 \renewcommand{\H}{\mathcal{H}}
-\renewcommand{\HH}{\hat{\mathscr{H}}} 
+\renewcommand{\O}{\mathcal{O}}
+\renewcommand{\HH}{\mathscr{H}} 
 
 \renewcommand{\u}{\uparrow}
 \renewcommand{\d}{\downarrow}
@@ -28,10 +74,12 @@
 
 \newcommand{\UU}{\mathcal{U}}
 
+%% Image Path %%
 \graphicspath{{images/}}
 
+%% TOC Setup %%
 \setcounter{tocdepth}{3}
-% \setcounter{secnumdepth}{3}
+\setcounter{secnumdepth}{3}
 
 \title{Quantum Cellular Automata}
 \subtitle{NIUS Physics (Batch 20) \\ Mid-Term Report \\ Camp: 20.2}
@@ -80,6 +128,7 @@
 }
 
 \tableofcontents
+\lstlistoflistings
 
 \mainmatter
 
@@ -206,13 +255,13 @@ In this section, we will construct the system used in this analysis. And also go
 \subsection{Defining System}
 Let a \(d\)-dimensional lattice \(L = \Z^{d}\) composed of qubits (or in general \(q\)-level systems ``\vocab{qubits}'') which represents a \(d\)-dimensional quantum many-body system arranged in a spatially local manner. The discrete-time evolution of such a quantum many-body system by applying local unitary gates defines a quantum circuit. We will restrict our discussion to
 \begin{enumerate}[(i), noitemsep]
-    \item local quantum gates -- unitary transformtion acting on a few neighbouring qubits,
+    \item local quantum gates -- unitary transformation acting on a few neighbouring qubits,
     \item local projective measurements -- observations which leave the measured qubit in a state with definite eigenvalue of the measured operator.
 \end{enumerate}
 
 \subsection{Quantum Entanglement}
 
-In 1935 \cite{Einstein1935}, Albert Einstein, Boris Podolsky, and Nathan Rosen published a paper on counterintuitive predictions that quantum mechanics makes for pairs of objects prepared together in a particular way. In this study, the three formulated a thought experiment (today known as EPR-paradox) to show that "the quantum-mechanical description of physical reality given by wave functions is not complete."
+In 1935 \cite{Einstein1935}, Albert Einstein, Boris Podolsky, and Nathan Rosen published a paper on counterintuitive predictions that quantum mechanics makes for pairs of objects prepared together in a particular way. In this study, the three formulated a thought experiment (today known as EPR-paradox) to show that ``the quantum-mechanical description of physical reality given by wavefunctions is not complete.''
 
 \begin{definition}[Quantum Entanglement]
     An entangled system is one whose quantum state cannot be separated as a tensor product of the quantum states of its local constituents.
@@ -220,13 +269,13 @@ In 1935 \cite{Einstein1935}, Albert Einstein, Boris Podolsky, and Nathan Rosen p
 
 Consider two arbitrary quantum many-body systems $A$ and $B$, with respective Hilbert spaces \(\H_{A}\) and \(\H_{B}\). The composite Hilbert space is a tensor product given by \(\H:= \H_{A} \otimes \H_{B}\). Say system \(A\) is in a state \(\ket{\Psi}_A\) and \(B\) is in \(\ket{\Psi}_B\), the state of the composite system is given by \(\ket{\Psi}_A \otimes \ket{\Psi}_B\).
 \begin{remark}[Pure and Entangled state]
-    If the state of the composite system can be represented in the tensor product of the states of individual systems, then we call this composite state a separable state or \vocab{pure state}.
+    If the state of the composite system can be expressed in the tensor product of the states of individual systems, then we call this composite state a separable state or \vocab{pure state}.
 
     \noindent Not all states are pure states. Let \(\qty{\ket{\mu}_A}\) be a set of basis for the space \(\H_A\) and set \(\qty{\ket{\nu}_B}\) be a basis for the space \(\H_B\). The most general state in \(\H\) is of the form
-    \[
+    \begin{equation}\label{eq:tensor_state}
         \ket{\Psi} = \sum_{\mu,\!\nu}^{} c_{\mu \nu} \ket{\mu}_A \otimes \ket{\nu}_B
-    \]
-    This state is separable if and only if there exist vectors \(\qty[c_{\mu}^{A}]\) and \(\qty[c_{\nu}^{B}]\) such that \(c_{\mu \nu} = c_{\mu}^{A} c_{\nu}^{B}\), yielding \(\ket{\Psi}_A:= \sum_{\mu} c_{\mu}^{A} \ket{\mu}\) and \(\ket{\phi}_B:= \sum_{\nu} c_{\nu}^{B} \ket{\nu}\). And it is inseparable if such vectors don't exist. If a state is inseparable, it is called an `\vocab{entangled state}.'
+    \end{equation}
+    This state is separable if and only if there exist vectors \(\qty[c_{\mu}^{A}]\) and \(\qty[c_{\nu}^{B}]\) such that \(c_{\mu \nu} = c_{\mu}^{A} c_{\nu}^{B}\), yielding \(\ket{\Psi}_A:= \sum_{\mu} c_{\mu}^{A} \ket{\mu}\) and \(\ket{\phi}_B:= \sum_{\nu} c_{\nu}^{B} \ket{\nu}\). And it is inseparable if such vectors do not exist. If a state is inseparable, it is called an `\vocab{entangled state}.'
 \end{remark}
 
 \subsubsection{Density Matrix}
@@ -283,32 +332,142 @@ This basis set is sometimes referred as ``\emph{computational basis}.'' Similarl
 \begin{equation}
     \B_X = \qty{\ket{+} = \kr = \frac{1}{\sqrt{2}} \qty(\ku + \kd), \ket{-} = \kl = \frac{1}{\sqrt{2}} \qty(\ku - \kd)}
 \end{equation}
-In general, the time evolution of a quantum system (which is described by a wavefunction \(\ket{\Psi}\) at time \(t = 0\)) under a given Hamiltonian \(\hat{\mathscr{H}}\) is provided by
+In general, the time evolution of a quantum system (which is described by a wavefunction \(\ket{\Psi}\) at time \(t = 0\)) under a given Hamiltonian \(\mathscr{H}\) which is represented by a matrix \(\O\) is provided by
 \[
-    \ket{\Psi (t)} = \UU(t) \ket{\Psi}, \qquad \UU(t) := \exp(- i \HH \frac{t}{\hslash})
+    \ket{\Psi (t)} = \UU(t) \ket{\Psi}, \qquad \UU(t) := \exp(- i \O \frac{t}{\hslash})
 \]
-For a single qubit, all possible Hamiltonians are \(2 \times 2\) Hermitian operator, which can be written as a linear combination of the three ``\vocab{Pauli Matrices}'' and the identity matrix.
+For a single qubit, all possible Hamiltonians are \(2 \times 2\) Hermitian operator, which can be written as a linear combination (over \(\R\)) of the three ``\vocab{Pauli Matrices}'' and the identity matrix. Define \(S = \qty{\I{}, X, Y, Z}\)
 \begin{equation}
     X = \mqty(0 & 1 \\ 1 & 0), \qquad Y = \mqty(0 & -i \\ i & 0), \qquad Z = \mqty(1 & 0 \\ 0 & -1), \qquad \I{} = \mqty(1 & 0 \\ 0 & 1).
 \end{equation}
+Using this construction, we can decompose any Hamiltonian operator \(\O\) as
+\[
+    \O = \sum_{S} c_S S = c_{\I{}} \I{} + c_X X + c_Y Y + c_Z Z
+\]
+the coefficients in this expansion are real and given by \(c_S = \half \Tr(S \O)\). The corresponding unitary can be written as
+\[
+    u = \exp(- i \sum_{S} h_S S)
+\]
+where, the coefficients \(h_S\) are real.\\
+{\bfseries \uline{Hadamard Gates:}} This gate is often referred as ``superposition gate'', and represented as \(H\) in quantum circuits. It maps the computational basis as follows:
+\begin{equation*}
+    \ku \xmapsto{H} \frac{\ku + \kd}{\sqrt{2}} = \kr \quad ; \quad \kd \xmapsto{H} \frac{\ku - \kd}{\sqrt{2}} = \kl
+\end{equation*}
+The name superposition is evident after looking at the map, as it creates an equal superposition state. From the map itself, we can compute the matrix representation as
+\begin{equation}\label{eq:hadamard}
+    H = \frac{1}{\sqrt{2}} \mqty(1 & 1 \\ 1 & -1).
+\end{equation}
+
+\noindent {\bfseries \uline{Quantum Random Walk:}}\\
+Consider a quantum system composed of one qubit whose dynamics are governed by unitary gates and projective measurements. If the qubit is in a pure state, then the state is a point on the Bloch sphere, defined by the polarization vector $(\expval{X}, \expval{Y}, \expval{Z})$. Unitary transformations rotate the state vector on the ``\vocab{Bloch Sphere}.'' A projective measurement, say along \(Z\), causes a stochastic jump to the north or the south pole, depending upon the measurement outcome.
+
+Due to this randomness, an arbitrary sequence of unitaries and measurements gives a \vocab{Random Walk} on the Bloch Sphere, also called ``\impt{Quantum Random Walk}.''
+
+\subsubsection{Two qubit system and controlled gates}
+
+We define the system's state by tensor product for a pair of qubits. Let the two qubits be indexed as \(1, ~2\), so the Hilbert space of the composite system is \(\H_{12} := \H_1 \otimes \H_2 = \H^{\otimes 2}\), keep in mind \(\H_1 = \H_2 = \H = \Span(\ku, \kd)\). Recall \cref{eq:tensor_state}, any general state of this system \(\ket{\Psi} \in \H_{12}\) can be written as
+\[
+    \ket{\Psi} = \sum_{i, j \in \H} c_{i j} \ket{i}_1 \otimes \ket{j}_2
+\]
+Extending the same idea of the tensor product to the operators, any Hermitian operator \(\O\) may be written as a sum of tensor products of these operators acting on two qubits. To reduce the confusion, consider we apply a one qubit gate \(G\) to qubit one, and we don't disturb the second qubit (or use identity operator), and then the operator will be denoted as
+\[
+    G_1 = G \otimes \I{}
+\]
+observe the \(1\) in subscript of \(G\), this represents that we have applied \(G\) on qubit one alone.\\
+
+\noindent {\bfseries \uline{Controlled Gates:}} Controlled gates act on two or more qubits, where one or more qubits act as a control for some operation. We will restrict ourselves to two-qubit controlled gates.
+
+\noindent Consider a unitary operator \(U\),
+\[
+    U = \mqty(u_{00} & u_{01} \\ u_{10} & u_{11}).
+\]
+And we want to apply this operator on qubit 2 when controlled by qubit 1. This statement can be rephrased as `if the control qubit is in state \(\ku\), then do nothing, but if it is in state \(\kd\), then apply the unitary gate \(U\) on target qubit.' Say this `\vocab{control-U}' gate is represented as \(CU\) in quantum circuits, and this gate maps the computational basis as follows:
+\begin{align*}
+     & \ket{\u \u} \xmapsto{CU} \ket{\u \u}      \\
+     & \ket{\u \d} \xmapsto{CU} \ket{\u \d}      \\
+     & \ket{\d \u} \xmapsto{CU} \kd \otimes U\ku \\
+     & \ket{\d \d} \xmapsto{CU} \kd \otimes U\kd \\
+\end{align*}
+With this mapping, we can compute the matrix representation of \(CU\) as
+\begin{equation}
+    % CU = \mqty(\mqty{\imat{2}} & \mqty{\zmat{2}{2}} \\ \mqty{\zmat{2}{2}} & \mqty{u_{00} & u_{01} \\ u_{10} & u_{11}})
+    CU = \mqty(
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    0 & 0 & u_{00} & u_{01} \\
+    0 & 0 & u_{10} & u_{11}
+    )
+\end{equation}
+We can have a Hamiltonian representation for this controlled unitary operation as
+\begin{equation}\label{eq:CU-exp}
+    CU = \exp(- i \frac{\pi}{4} [\I{} - Z_1][\I{} - U_2])
+\end{equation}
+here, \(\I{}\) represent a \(4 \times 4\) identity matrix; also take a note about subscripts in \(Z\) and \(U\) gates.
 
 \subsection{Toy example}
 
-For
+In this example, we will see how these different gates and concepts can result in good results.
+
+\noindent Consider a quantum many-body system composed of four qubits. We will evolve this system under `control-Hadamard gate' (CH). We will do a projective measurement of qubit three after the unitary transformation (see \cref{fig:toy_model}).
+
+Recall matrix representation of Hadamard gate from \cref{eq:hadamard}. Using the time-evolution form, we can find the matrix of the control Hadamard gate (given in \cref{eq:CU-exp}). We have
+\begin{equation*}
+    CH = \exp(- i \frac{\pi}{4} [\I{} - Z_1][\I{} - H_2])
+\end{equation*}
+And using \href{https://www.wolfram.com/mathematica/}{\texttt{Mathematica}}, we can compute the exact form of the matrix (see \cref{appendix:code})
+\begin{equation}
+    CH = \mqty(
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    0 & 0 & \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \\
+    0 & 0 & \frac{1}{\sqrt{2}} & - \frac{1}{\sqrt{2}}
+    )
+\end{equation}
+
+Since measurements are very non-trivial in quantum mechanics, and we don't have any classical analog of the same, so it isn't easy to simulate using classical systems.
+\begin{figure}[h]
+    \[
+        \begin{array}{c}
+            \Qcircuit @C=2.5em @R=2.5em {
+            \lstick{\kr} & \ctrl{1} & \qw \barrier{3} & \qw \\
+            \lstick{\kl} & \gate{H} & \qw             & \qw \\
+            \lstick{\kr} & \ctrl{1} & \meter          & \qw \\
+            \lstick{\kl} & \gate{H} & \qw             & \qw
+            }
+        \end{array}
+    \]
+    \caption{Quantum circuit of toy model}
+    \label{fig:toy_model}
+\end{figure}
+
 
 \section{Brickwall Structure}
 
-\subsection{Measurements and Evolution}
+\subsection{Evolution and Measurements}
 
 \section{Fidelity -- a measure of memory}
 
 \section{Operator Spread -- Diffusion of expectation value}
 
-\chapter{Conclusion}
+% \chapter{Conclusion}
 
 \appendix
 
-\chapter{Code}
+\chapter{Code}\label{appendix:code}
+
+\section{Toy example}
+
+% \begin{lstlisting}[language=Mathematica, caption={Computing matrix of CH gate}, label=]
+% Z = PauliMatrix[3];
+% H = HadamardMatrix[2];
+% Id = IdentityMatrix[4];
+% Z1 = KroneckerProduct[Z, IdentityMatrix[2]];
+% H2 = KroneckerProduct[IdentityMatrix[2], H];
+% CH = Simplify[MatrixExp[- I Pi/4 (Id-Z1).(Id-H2)]];
+% MatrixForm[CH]
+% \end{lstlisting}
+
+\lstinputlisting[language=Mathematica, caption={Computing matrix of CH gate}, label={lst:CH-mat}]{./codes/CH.txt}
 
 \backmatter
 \printbibliography[heading=bibintoc, title=Bibliography]

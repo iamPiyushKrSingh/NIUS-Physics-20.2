@@ -1,0 +1,7 @@
+ Z = PauliMatrix[3];
+ H = HadamardMatrix[2];
+ Id = IdentityMatrix[4];
+ Z1 = KroneckerProduct[Z, IdentityMatrix[2]];
+ H2 = KroneckerProduct[IdentityMatrix[2], H];
+ CH = Simplify[MatrixExp[- I \[Pi]/4 (Id-Z1).(Id-H2)]];
+ MatrixForm[CH]
