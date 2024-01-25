@@ -1,6 +1,6 @@
 \documentclass[11pt, oneside, listof=totoc]{scrbook}
 
-\usepackage[english]{babel}
+
 \counterwithout{figure}{chapter}
 
 \usepackage[linear]{handout}
@@ -10,45 +10,37 @@
 %% Quantum Circuits %% 
 \usepackage{qcircuit}
 
-\usepackage{listings}
-
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-
-\definecolor{identifiercolor}{rgb}{.4,.6,.56}
-\definecolor{stringcolor}{gray}{0.5}
-\definecolor{inactivecolor}{rgb}{0.15,0.15,0.5}
-
+%% Style for Listings %%
+\usepackage{jlcode}
 \lstdefinestyle{mystyle}{
-    basicstyle={\fontfamily{fvm}\selectfont},
-    backgroundcolor=\color{backcolour},   
-    commentstyle=\color{codegreen},
-    keywordstyle={\bfseries\color{inactivecolor}},
-    stringstyle={\bfseries\color{stringcolor}},
-    identifierstyle={\bfseries\color{identifiercolor}},
-    numberstyle=\tiny\color{codegray},
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
+    % basicstyle={\fontfamily{fvm}\selectfont},
+    % backgroundcolor=\color{backcolour},
+    % commentstyle=\color{codegreen},
+    % keywordstyle={\color{inactivecolor}},
+    % stringstyle={\color{stringcolor}},
+    % identifierstyle={\color{identifiercolor}},
+    numberstyle=\tiny\color{gray},
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=12pt,
+    showspaces=false,
     showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2
+    showtabs=false,
+    tabsize=2,
+    float = H,
+    frame = trBL,
+    frameround=fttt,
 }
 
 \lstset{style=mystyle}
 
-\lstdefinestyle{Mathematica}{
-morekeywords=[3]{KroneckerProduct, PauliMatrix, HadamardMatrix}
-}
-
 \renewcommand{\lstlistingname}{Code} % adjusts Listings caption and reference lst
 \renewcommand{\lstlistlistingname}{List of Code Snippets}
+
+\crefname{lstlisting}{code}{codes}
 
 %% EULER Fonts %%
 % \usepackage[T1]{fontenc}
@@ -124,7 +116,7 @@ morekeywords=[3]{KroneckerProduct, PauliMatrix, HadamardMatrix}
     (HBCSE-TIFR), Mumbai, India. We acknowledge the support of the Department of Atomic
     Energy, Govt. Of India, under Project Identification No. RTI4001.\\
 
-    Special appreciation is extended to my project instructor, Sambudhha Sanyal, for his guidance, expertise, and unwavering commitment throughout this project. His mentorship has been instrumental in shaping the direction and success of our research endeavors. We are truly grateful for his dedication and encouragement, which have significantly enriched our learning experience within the framework of the NIUS program.
+    I want to thank my project instructor, Sambudhha Sanyal, for his guidance, expertise, and unwavering commitment throughout this project. His mentorship has been instrumental in shaping the direction and success of our research endeavors. We are truly grateful for his dedication and encouragement, which have significantly enriched our learning experience within the framework of the NIUS program.
 }
 
 \tableofcontents
@@ -406,15 +398,15 @@ here, \(\I{}\) represent a \(4 \times 4\) identity matrix; also take a note abou
 
 \subsection{Toy example}
 
-In this example, we will see how these different gates and concepts can result in good results.
+In this example, we will see how these different gates and concepts can result in good results.\hfill \\
 
-\noindent Consider a quantum many-body system composed of four qubits. We will evolve this system under `control-Hadamard gate' (CH). We will do a projective measurement of qubit three after the unitary transformation (see \cref{fig:toy_model}).
+\noindent For our toy example, we will evolve our system under `control-Hadamard gate' ($CH$). We will do a projective measurement of our system after the unitary transformation.
 
 Recall matrix representation of Hadamard gate from \cref{eq:hadamard}. Using the time-evolution form, we can find the matrix of the control Hadamard gate (given in \cref{eq:CU-exp}). We have
 \begin{equation*}
     CH = \exp(- i \frac{\pi}{4} [\I{} - Z_1][\I{} - H_2])
 \end{equation*}
-And using \href{https://www.wolfram.com/mathematica/}{\texttt{Mathematica}}, we can compute the exact form of the matrix (see \cref{appendix:code})
+And using \href{https://www.wolfram.com/mathematica/}{\texttt{Mathematica}}, we can compute the exact form of the matrix (see \cref{lst:CH-mat})
 \begin{equation}
     CH = \mqty(
     1 & 0 & 0 & 0 \\
@@ -424,7 +416,18 @@ And using \href{https://www.wolfram.com/mathematica/}{\texttt{Mathematica}}, we 
     )
 \end{equation}
 
-Since measurements are very non-trivial in quantum mechanics, and we don't have any classical analog of the same, so it isn't easy to simulate using classical systems.
+Since measurements are very non-trivial in quantum mechanics, and we don't have any classical analog of the same, it isn't easy to simulate using classical systems. We will use projective measurements (of \(Z\)) in our discussion as we can find the matrix for the same. Say we want to project the state of a qubit in \(Z\) basis so that we can use the projection operator given by
+\begin{equation*}
+    P_{\u} = \ku \bra{\u} = \mqty(1 & 0 \\ 0 & 0) \qquad \qquad P_{\d} = \kd \bra{\d} = \mqty(0 & 0 \\ 0 & 1)
+\end{equation*}
+For our example, say we want to measure the third qubit in \(\ku\) state, so the corresponding matrix of projection will be as follows:
+\begin{equation*}
+    P_{\u}^{(3)} = \I{} \otimes \I{} \otimes P_{\u} \otimes \I{}
+\end{equation*}
+
+\noindent{\bfseries \uline{System construction:}}\\
+Consider a quantum many-body system composed of four qubits evolving through time under a unitary operator (control-$H$)
+
 \begin{figure}[h]
     \[
         \begin{array}{c}
@@ -452,6 +455,12 @@ Since measurements are very non-trivial in quantum mechanics, and we don't have 
 % \chapter{Conclusion}
 
 \appendix
+
+\chapter{Notations}
+
+\section{Quantum Gates}
+
+\section{Subscript scheme for gates}
 
 \chapter{Code}\label{appendix:code}
 
