@@ -1,11 +1,32 @@
 \documentclass[11pt, oneside, listof=totoc]{scrbook}
 
-
 \counterwithout{figure}{chapter}
 
 \usepackage[linear]{handout}
 \usepackage{scrhack}
 % \setlist{nosep}
+
+\usepackage{tikz, pgfplots}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{backgrounds}
+\usepgfplotslibrary{patchplots}
+\usepgfplotslibrary{fillbetween}
+\pgfplotsset{%
+    layers/standard/.define layer set={%
+        background,axis background,axis grid,axis ticks,axis lines,axis tick labels,pre main,main,axis descriptions,axis foreground%
+    }{
+        grid style={/pgfplots/on layer=axis grid},%
+        tick style={/pgfplots/on layer=axis ticks},%
+        axis line style={/pgfplots/on layer=axis lines},%
+        label style={/pgfplots/on layer=axis descriptions},%
+        legend style={/pgfplots/on layer=axis descriptions},%
+        title style={/pgfplots/on layer=axis descriptions},%
+        colorbar style={/pgfplots/on layer=axis descriptions},%
+        ticklabel style={/pgfplots/on layer=axis tick labels},%
+        axis background@ style={/pgfplots/on layer=axis background},%
+        3d box foreground style={/pgfplots/on layer=axis foreground},%
+    },
+}
 
 %% Quantum Circuits %% 
 \usepackage{qcircuit}
@@ -606,18 +627,63 @@ See \cref{eg:toy-model} we can continue to apply unitary gates in the same manne
     \caption{Extended version of our toy model quantum circuit}
     \label{fig:toy-ext}
 \end{figure}
-Using the same methodology, we can compute the final state of the Julia program (see \cref{lst:toy-ext})
-
-
+Using the same methodology, we can compute the final state of this quantum system with the Julia program (see \cref{lst:toy-ext}). With the program, we can compute the final state for any generation \(\tau\) with the function \lstinline[language=julia]$state_evolution$
+\begin{equation*}
+    \ket{\Psi} = \mqty(
+    0.25+0.0 i  \\
+    -0.25+0.0 i \\
+    0.25+0.0 i  \\
+    -0.25+0.0 i \\
+    -0.25+0.0 i \\
+    0.25+0.0 i  \\
+    -0.25+0.0 i \\
+    0.25+0.0 i  \\
+    0.25+0.0 i  \\
+    -0.25+0.0 i \\
+    0.25+0.0 i  \\
+    -0.25+0.0 i \\
+    -0.25+0.0 i \\
+    0.25+0.0 i  \\
+    -0.25+0.0 i \\
+    0.25+0.0 i
+    ) \xrightarrow{U(4; 0)}
+    \mqty(
+    0.25+0.0 i \\
+    -0.25+0.0 i \\
+    0.25+0.0 i \\
+    -0.25+0.0 i \\
+    0.0 i \\
+    -0.35+0.0 i \\
+    -0.25+0.0 i \\
+    0.25+0.0 i \\
+    0.177+0.0 i \\
+    0.073+0.0 i \\
+    -0.177+0.0 i \\
+    0.427+0.0 i \\
+    0.0 i \\
+    -0.35+0.0 i \\
+    -0.25+0.0 i \\
+    0.25+0.0 i \\
+    )
+\end{equation*}
 
 \section{Fidelity -- a measure of memory}
 
+Quantum Cellular Automata are essential for quantum computation as they give rise to exciting physics as we change gates and projective measurements.
+\begin{definition}[Fidelity]
+
+\end{definition}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{fidelity_plot.png}
+%     \caption{Hello}
+%     \label{fig:fidelity}
+% \end{figure} \noindent
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{fidelity_plot.png}
-    \caption{Hello}
-    \label{fig:fidelity}
-\end{figure} \noindent
+    \resizebox{\textwidth}{!}{\input{images/fidelity_plot.tikz}}
+\end{figure}
 
 
 \section{Operator Spread -- Diffusion of expectation value}
@@ -650,7 +716,7 @@ Using the same methodology, we can compute the final state of the Julia program 
 
 \lstinputlisting[language=julia, caption={Simulating the final state of toy example using matrix operations}, label={lst:toy-final}]{./codes/toy-model.jl}
 
-\lstinputlisting[language=julia, caption={Simulating the final state of our extended system using matrix operations}, label={lst:toy-ext}]{./codes/toy-model.jl}
+\lstinputlisting[language=julia, caption={Simulating the final state of our extended system using matrix operations}, label={lst:toy-ext}]{./codes/toy-ext.jl}
 
 \section{Fidelity Calculations}
 
