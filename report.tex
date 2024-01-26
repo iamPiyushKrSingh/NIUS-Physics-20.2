@@ -411,7 +411,7 @@ And using \href{https://www.wolfram.com/mathematica/}{\texttt{Mathematica}}, we 
     CH = \mqty(
     1 & 0 & 0 & 0 \\
     0 & 1 & 0 & 0 \\
-    0 & 0 & \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \\
+    0 & 0 & \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \\[2.5ex]
     0 & 0 & \frac{1}{\sqrt{2}} & - \frac{1}{\sqrt{2}}
     )
 \end{equation}
@@ -430,6 +430,7 @@ For our example, say we want to measure the third qubit in \(\ku\) state, so the
 % \noindent{\bfseries \uline{System construction:}}\\
 \subsubsection{System construction}
 \begin{example}[Four Qubit QC]
+    \label{eg:toy-model}
     Consider a quantum many-body system composed of four qubits evolving through time under a unitary operator ($CH$) arranged in a specific way (brickwork structure, see \cref{sec:brickwork}). After the evolution, we project the third qubit in the state \(\kd\). For a schematic diagram of the quantum circuit of this example, see \cref{fig:toy_model}. We prepare our system's initial state as follows:
     \begin{equation*}
         \ket{\Psi} = \kr \otimes \kl \otimes \kr \otimes \kl = \ket{\r\l\r\l}
@@ -456,7 +457,7 @@ Generally, qubits are initialized in the state \(\ku\), so we must create the qu
 
 \subsubsection{Calculating Final State}
 
-Now we know our quantum circuit, so we find the final state using a classical simulator (using \href{https://julialang.org/}{Julia}). Define the unitary transformation matrix as \(U_1 = CH \otimes CH\), and we can visualize the state evolution as follows:
+Now we know our quantum circuit, so we find the final state using a classical simulator (using \href{https://julialang.org/}{Julia} see \cref{lst:toy-final}). Define the unitary transformation matrix as \(U_1 = CH \otimes CH\), and we can visualize the state evolution as follows:
 \begin{equation*}
     \ket{\Psi} = \mqty(
     0.25+0.0 i  \\
@@ -547,26 +548,77 @@ We label all the pairwise unitary operators by the position of the control qubit
 
 \begin{figure}[H]
     \[
-        \Qcircuit @C=1.5em @R=1.5em {
-        & \lstick{n-3} & \ctrl{1} & \qw      & \ctrl{1} & \qw      & \ctrl{1} & \qw \\
-        & \lstick{n-2} & \gate{U} & \ctrl{1} & \gate{U} & \ctrl{1} & \gate{U} & \qw \\
-        & \lstick{n-1} & \ctrl{1} & \gate{U} & \ctrl{1} & \gate{U} & \ctrl{1} & \qw \\
-        & \lstick{n}   & \gate{U} & \ctrl{1} & \gate{U} & \ctrl{1} & \gate{U} & \qw \\
-        & \lstick{n+1} & \ctrl{1} & \gate{U} & \ctrl{1} & \gate{U} & \ctrl{1} & \qw \\
-        & \lstick{n+2} & \gate{U} & \ctrl{1} & \gate{U} & \ctrl{1} & \gate{U} & \qw \\
-        & \lstick{n+3} & \ctrl{1} & \gate{U} & \ctrl{1} & \gate{U} & \ctrl{1} & \qw \\
-        & \lstick{n+4} & \gate{U} & \qw      & \gate{U} & \qw      & \gate{U} & \qw
-        \inputgroupv{1}{8}{3em}{0em}{}
-        \inputgrouph{1}{8}{9.45em}{\ket{\psi}}{2.5em}
+        \Qcircuit @C=2em @R=2em {
+        &&&&\mbox{Gen. 3}&&&\\
+        & \lstick{1} & \multigate{1}{u_{1,1}} & \qw & \multigate{1}{u_{3,1}} & \qw & \multigate{1}{u_{5,1}} & \qw & \rstick{\cdots}\qw  \\
+        & \lstick{2} & \ghost{u_{1,1}}        & \multigate{1}{u_{2,2}} & \ghost{u_{3,1}}        & \multigate{1}{u_{4,2}} & \ghost{u_{5,1}}        & \multigate{1}{u_{6,2}} & \rstick{\cdots}\qw  \\
+        & \lstick{3} & \multigate{1}{u_{1,3}} & \ghost{u_{2,2}} & \multigate{1}{u_{3,3}} & \ghost{u_{4,2}} & \multigate{1}{u_{5,3}} & \ghost{u_{6,2}} & \rstick{\cdots}\qw  \\
+        & \lstick{4} & \ghost{u_{1,3}}        & \multigate{1}{u_{2,4}} & \ghost{u_{3,3}}        & \multigate{1}{u_{4,4}} & \ghost{u_{5,3}}        & \multigate{1}{u_{6,4}} & \rstick{\cdots}\qw  \\
+        & \lstick{5} & \multigate{1}{u_{1,5}} & \ghost{u_{2,4}} & \multigate{1}{u_{3,5}} & \ghost{u_{4,4}} & \multigate{1}{u_{5,5}} & \ghost{u_{6,4}} & \rstick{\cdots}\qw  \\
+        & \lstick{6} & \ghost{u_{1,5}}        & \multigate{1}{u_{2,6}} & \ghost{u_{3,5}}        & \multigate{1}{u_{4,6}} & \ghost{u_{5,5}}        & \multigate{1}{u_{6,6}} & \rstick{\cdots}\qw  \\
+        & \lstick{7} & \multigate{1}{u_{1,7}} & \ghost{u_{2,6}} & \multigate{1}{u_{3,7}} & \ghost{u_{4,6}} & \multigate{1}{u_{5,7}} & \ghost{u_{6,6}} & \rstick{\cdots}\qw  \\
+        & \lstick{8} & \ghost{u_{1,7}}        & \qw & \ghost{u_{3,7}}        & \qw & \ghost{u_{5,7}}        & \qw & \rstick{\cdots}\qw
+        \inputgroupv{2}{9}{1.5em}{0em}{}
+        \inputgrouph{2}{9}{10.1em}{\H^{\otimes 8} \ni \ket{\psi}}{3.5em}
+        \gategroup{2}{5}{9}{5}{1em}{--}
         }
     \]
-    \caption{A spacetime diagram of }
+    \caption{A spacetime diagram of 8 qubits RQC. This arrangement of two-site unitary gates will be called a brickwork structure.}
     \label{fig:brickwork}
 \end{figure}
+See \cref{fig:brickwork}, we have considered a chain of 8 qubits as our quantum many-body system. To become familiar with the notation regarding the unitary transformations, look at the marked generation 3. The unitary operator for \(2 \to 3\) transition is given by:
+\begin{equation*}
+    U_3 = \bigotimes_{x \in \text{odd bonds}} u_{3, x} = u_{3,1} \otimes u_{3,2} \otimes u_{3,5} \otimes u_{3,7}
+\end{equation*}
+We can see that the circuit grows from left to right, and the index \(\tau\) is increasing, implying the direction of time from \ie from left to the right.
 
-\subsection{Evolution and Measurements}\label{ssec:measurement}
+If we construct our RQCs in this described fashion (\ie brickwork structure), we can note an underlying property that makes these circuits a good contender for QCAs \ie spatial locality. And if we introduce a fixed pattern on \(U_\tau\), we will retrieve time universality.\\
+
+This circuit has \emph{no conservation laws} (even energy conservation is not conserved). But this system has local equilibrium states. Under the unitary evolution, an arbitrary initial state equilibrates to a local Gibbs state\footnote{\url{https://en.wikipedia.org/wiki/Gibbs_state}}.
+
+\subsection{Measurements}\label{ssec:measurement}
+
+We know what a measurement means in the context of quantum physics. But how this measurement affects our quantum circuits is something new. Measurements affect the state of a qubit. In RQCs, the state of the neighbouring qubits depends upon the state of the measured qubit. If the number of measurements is significant in a given spacetime volume (\ie in a defined random quantum circuit), we may see altered system dynamics.
+
+Say we measure the \(i\)\textsuperscript{th} qubit in a given quantum circuit in computational basis (\ie \(Z\) basis). If the state of the quantum circuit before the measurement is given by \(\ket{\psi}\), then the state vector after measurement will be
+\begin{equation}
+    \ket{\psi} \to \begin{cases}
+        \frac{P_\u^{(i)} \ket{\psi}}{p_\u^{(i)}} & \text{with probability \(p_\u^{(i)} = \ev**{P_\u^{(i)}}{\psi}\)} \\[4ex]
+        \frac{P_\d^{(i)} \ket{\psi}}{p_\d^{(i)}} & \text{with probability \(p_\d^{(i)} = \ev**{P_\d^{(i)}}{\psi}\)}
+    \end{cases}
+\end{equation}
+A local projective measurement disentangles the qubit \(i\) from the system.
+
+If an RQC contains projective measurement operators, we call those circuits ``\vocab{monitored}'' quantum circuits. For classical computers, these monitored random quantum circuits work as models for a quantum phase transition in computational complexity.
+
+\subsection{Extending Toy example}
+See \cref{eg:toy-model} we can continue to apply unitary gates in the same manner (as constructed in \cref{sec:brickwork}). Consider using the brickwork structure on that example for four generations.
+\begin{figure}[H]
+    \[
+        \Qcircuit @C=2em @R=2em {
+        & \mbox{Gen 1} \barrier[-1.75em]{4} & \mbox{Gen 2} \barrier[-1.75em]{4} & \mbox{Gen 3} \barrier[-1.75em]{4} & \mbox{Gen 4} \barrier[-1em]{4} &         \\
+        \lstick{\kr} & \ctrl{1} & \qw      & \ctrl{1} & \qw      & \rstick{\cdots} \qw \\
+        \lstick{\kl} & \gate{H} & \ctrl{1} & \gate{H} & \ctrl{1} & \rstick{\cdots} \qw \\
+        \lstick{\kr} & \ctrl{1} & \gate{H} & \ctrl{1} & \gate{H} & \rstick{\cdots} \qw \\
+        \lstick{\kl} & \gate{H} & \qw      & \gate{H} & \qw      & \rstick{\cdots} \qw
+        }
+    \]
+    \caption{Extended version of our toy model quantum circuit}
+    \label{fig:toy-ext}
+\end{figure}
+Using the same methodology, we can compute the final state of the Julia program (see \cref{lst:toy-ext})
+
+
 
 \section{Fidelity -- a measure of memory}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fidelity_plot.png}
+    \caption{Hello}
+    \label{fig:fidelity}
+\end{figure} \noindent
+
 
 \section{Operator Spread -- Diffusion of expectation value}
 
@@ -596,12 +648,13 @@ We label all the pairwise unitary operators by the position of the control qubit
 
 \lstinputlisting[language=Mathematica, caption={Computing matrix of CH gate}, label={lst:CH-mat}]{./codes/CH.txt}
 
-\lstinputlisting[language=julia, caption={Simulating the final state using matrix operations}, label={lst:toy-final}]{./codes/toy-model.jl}
+\lstinputlisting[language=julia, caption={Simulating the final state of toy example using matrix operations}, label={lst:toy-final}]{./codes/toy-model.jl}
+
+\lstinputlisting[language=julia, caption={Simulating the final state of our extended system using matrix operations}, label={lst:toy-ext}]{./codes/toy-model.jl}
 
 \section{Fidelity Calculations}
 
 
-\backmatter
-\printbibliography[heading=bibintoc, title=Bibliography]
+\backmatter\printbibliography[heading=bibintoc, title=Bibliography]
 
 \end{document}
