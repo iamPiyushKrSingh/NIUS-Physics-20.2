@@ -6,27 +6,7 @@
 \usepackage{scrhack}
 % \setlist{nosep}
 
-\usepackage{tikz, pgfplots}
-\usetikzlibrary{arrows.meta}
-\usetikzlibrary{backgrounds}
-\usepgfplotslibrary{patchplots}
-\usepgfplotslibrary{fillbetween}
-\pgfplotsset{%
-    layers/standard/.define layer set={%
-        background,axis background,axis grid,axis ticks,axis lines,axis tick labels,pre main,main,axis descriptions,axis foreground%
-    }{
-        grid style={/pgfplots/on layer=axis grid},%
-        tick style={/pgfplots/on layer=axis ticks},%
-        axis line style={/pgfplots/on layer=axis lines},%
-        label style={/pgfplots/on layer=axis descriptions},%
-        legend style={/pgfplots/on layer=axis descriptions},%
-        title style={/pgfplots/on layer=axis descriptions},%
-        colorbar style={/pgfplots/on layer=axis descriptions},%
-        ticklabel style={/pgfplots/on layer=axis tick labels},%
-        axis background@ style={/pgfplots/on layer=axis background},%
-        3d box foreground style={/pgfplots/on layer=axis foreground},%
-    },
-}
+\input{tikz-input.tex}
 
 %% Quantum Circuits %% 
 \usepackage{qcircuit}
@@ -159,9 +139,9 @@ And there are multiple reasons why we should care about QCAs. First, this is par
 
 % When this abstract concept is combined with seemingly weird notions of `Quantum Mechanics,' we get Quantum Cellular Automata (QCA).
 
-Also, in the later part of the discussion, we will see the application of these `discrete' quantum systems (in the form of ``\impt{Random Quantum Circuits}''\cite{Fisher2023}), explaining some of the various emergent properties like:
+Also, in the later part of the discussion, we will see the application of these `discrete' quantum systems (in the form of ``\impt{Random Quantum Circuits}''\cite{Fisher2023}), observing some of the various emergent properties like:
 \begin{enumerate}[(a), noitemsep]
-    \item Periodic Fidelity,
+    \item Fidelity,
     \item Information spread (encoded as \emph{Operator Spread}).
 \end{enumerate}
 
@@ -190,7 +170,7 @@ Before giving a formal definition, let's look at an example:
     We named this update rule as \verb|Rule 110| because if you treat the last row of the table as a binary number, it converts to 110 in the decimal system. This CA can simulate a Turing machine efficiently (with only polynomial overhead).
     \begin{figure}[H]
         \centering
-        \includegraphics[width = 0.7\textwidth]{rule110_cellular_automaton.png}
+        \includegraphics[width = 0.9\textwidth]{rule110_cellular_automaton.png}
         \caption{An example of a CA evolution for the rule 110 CA, with time going up. Bits with value 1 are
             represented by the yellow squares, while blue squares represent 0.}
         \label{fig:rule110}
@@ -218,7 +198,7 @@ To better understand this local transition function \(f\), consider a cell \(x \
     Observe the \cref{eg:rule110}; we can fit this scenario in the definition. In this case \(L = \Z\), \(\Sigma = \qty{0, 1}\), for $i^{\text{th}}$ cell \(\mathcal{N} := \qty{i-1,~ i,~ i+1}\) and \(f\) is defined according to the update rule specified in \cref{tab:rule110}.
 \end{remark}
 
-\pagebreak
+% \pagebreak
 \subsection{Characteristics of Cellular Automata}
 
 In the definition and example, we have used a few terms; now we will define them (and these will be the main characteristics of cellular automata):
@@ -338,9 +318,9 @@ In this section, we will see what a local unitary operator is in light of quantu
 
 \subsection{Basics of Quantum Computer -- for a single qubit}
 For a single qubit, we have a finite state space \(\Sigma = \qty{0, 1}\), so we can infer that Hilbert space \(\H\) for this system is 2-dimensional. The state set can be seen as eigenvalues of a Hermitian operator (to be precise, a Pauli matrix) \(Z\). With these assumptions, we can define the eigenbasis for this Hilbert space \(\H\) as
-\[
+\begin{equation}
     \B_Z = \qty{\ku = \ket{\uparrow} = \mqty(1 \\ 0),~ \kd= \ket{\downarrow} = \mqty(0 \\ 1)}
-\]
+\end{equation}
 This basis set is sometimes referred as ``\emph{computational basis}.'' Similarly, we can define the other two sets of eigenbasis corresponding to the two remaining Pauli matrices.
 \begin{equation}
     \B_X = \qty{\kr = \ket{\rightarrow} = \frac{1}{\sqrt{2}} \qty(\ku + \kd),~ \kl = \ket{\leftarrow} = \frac{1}{\sqrt{2}} \qty(\ku - \kd)}
@@ -441,7 +421,14 @@ Since measurements are very non-trivial in quantum mechanics, and we don't have 
 \begin{equation*}
     P_{\u} = \ku \bra{\u} = \mqty(1 & 0 \\ 0 & 0) \qquad \qquad P_{\d} = \kd \bra{\d} = \mqty(0 & 0 \\ 0 & 1)
 \end{equation*}
-These matrices will be used to calculate the next state after we make a projective measurement for a single qubit
+These matrices will be used to calculate the next state after we make a projective measurement for a single qubit. For that, we calculate the corresponding probability as
+\begin{equation*}
+    p_\u = \ev**{P_{\u}}{\psi}
+\end{equation*}
+So, the state after the measurement will be given by (considering renormalization):
+\begin{equation}
+    \ket{\psi_m} = \frac{{P_{\u}} \ket{\psi}}{\sqrt{p_\u}}
+\end{equation}
 
 For our example, say we want to measure the third qubit in \(\ku\) state, so the corresponding matrix of projection will be as follows:
 \begin{equation*}
@@ -616,7 +603,7 @@ If an RQC contains projective measurement operators, we call those circuits ``\v
 See \cref{eg:toy-model} we can continue to apply unitary gates in the same manner (as constructed in \cref{sec:brickwork}). Consider using the brickwork structure on that example for four generations.
 \begin{figure}[H]
     \[
-        \Qcircuit @C=2em @R=2em {
+        \Qcircuit @C=2.5em @R=2.5em @! {
         & \mbox{Gen 1} \barrier[-1.75em]{4} & \mbox{Gen 2} \barrier[-1.75em]{4} & \mbox{Gen 3} \barrier[-1.75em]{4} & \mbox{Gen 4} \barrier[-1em]{4} &         \\
         \lstick{\kr} & \ctrl{1} & \qw      & \ctrl{1} & \qw      & \rstick{\cdots} \qw \\
         \lstick{\kl} & \gate{H} & \ctrl{1} & \gate{H} & \ctrl{1} & \rstick{\cdots} \qw \\
@@ -664,25 +651,49 @@ Using the same methodology, we can compute the final state of this quantum syste
     -0.35+0.0 i \\
     -0.25+0.0 i \\
     0.25+0.0 i \\
-    )
+    ) = \ket{\Phi_e^{(4)}}
 \end{equation*}
 
 \section{Fidelity -- a measure of memory}
 
-Quantum Cellular Automata are essential for quantum computation as they give rise to exciting physics as we change gates and projective measurements.
-\begin{definition}[Fidelity]
+Quantum Cellular Automata are essential for quantum computation as they give rise to exciting physics as we change gates and projective measurements. However, due to the peculiar nature of quantum physics, it is not easy to encode our classical information in quantum computers.
 
+So, if we use quantum computers, we must check the output states (are they as expected or not). For the same, we require a quantity that works as an indicator in this case.
+\begin{definition}[Fidelity]
+    Fidelity measures ``overlap'' between two states from a given Hilbert space \(\H\). Consider two states \(\ket{\psi}, \ket{\phi} \in \H\); we define fidelity between these two states as follows:
+    \begin{equation}
+        F(\psi, \phi) = \abs{\ip{\psi}{\phi}}^2
+    \end{equation}
 \end{definition}
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=\textwidth]{fidelity_plot.png}
-%     \caption{Hello}
-%     \label{fig:fidelity}
-% \end{figure} \noindent
+Fidelity can be interpreted in many different ways:
+\begin{description}
+    \item[\normalfont \uline{Probabilistic Interpretation:}] It is the probability that the state \(\ket{\psi}\) will pass the projective measurement onto the state \(\ket{\phi}\).
+    \item[\normalfont \uline{Metric on Hilbert Space:}] It is the cosine of angular distance between two states in the given Hilbert space.\label{info:metric}
+\end{description}
+
+\noindent We can observe the following properties of this quantity:
+\begin{itemize}
+    \item {\sffamily Symmetry:} \(F(\psi, \phi) = F(\phi, \psi)\).
+    \item {\sffamily Bounded Values:} For any \(\psi, \phi\), we have
+          \begin{equation*}
+              0 \le F(\phi, \psi) \le 1 \qquad \mbox{and} \qquad F(\psi, \psi) = 1 = F(\phi, \phi)
+          \end{equation*}
+\end{itemize}
+
+\begin{remark}[Angle between two states]
+    Building upon the ``metric'' interpretation, we define \emph{angle between two states} as:
+    \begin{equation*}
+        A(\psi, \phi) = \cos[-1](F(\psi, \phi)).
+    \end{equation*}
+    The angle is non-negative, symmetric in its inputs, and is equal to zero if and only if $\psi = \phi$. This follows triangle inequality.
+\end{remark}
 
 \begin{figure}[H]
     \centering
+    % \includegraphics[width=\textwidth]{fidelity_plot.png}
     \resizebox{\textwidth}{!}{\input{images/fidelity_plot.tikz}}
+    \caption{Fidelity vs Number of generations}
+    \label{fig:fidelity}
 \end{figure}
 
 
@@ -692,13 +703,23 @@ Quantum Cellular Automata are essential for quantum computation as they give ris
 
 \appendix
 
-% \chapter{Notations}
+\chapter{Notations}
 
-% \section{Quantum Gates}
+\section{Quantum Gates}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Quantum_Logic_Gates.png}
+    \caption{Quantum Logic Gates}
+    \label{fig:quantum-logic-gates}
+\end{figure} \noindent
 
-% \section{Subscript scheme for gates}
+
+\section{Subscript scheme for gates}
 
 \chapter{Code}\label{appendix:code}
+
+\section[Classical Cellular Automata]{Cellular Automata}
+\lstinputlisting[language=julia, caption={Generating Spacetime diagram of CA \texttt{rule 110}}, label={lst:rule110}]{./codes/rule-110.jl}
 
 \section{Toy example}
 
@@ -720,6 +741,7 @@ Quantum Cellular Automata are essential for quantum computation as they give ris
 
 \section{Fidelity Calculations}
 
+\lstinputlisting[language=julia, caption={Plotting fidelity vs increasing generations}, label={lst:fidelity}]{./codes/fidelity.jl}
 
 \backmatter\printbibliography[heading=bibintoc, title=Bibliography]
 
