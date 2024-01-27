@@ -121,7 +121,7 @@
 }
 
 \tableofcontents
-\lstlistoflistings
+% \lstlistoflistings
 
 \mainmatter
 
@@ -234,8 +234,16 @@ In the context of cellular automata, we know that the state of a cell is only in
 \end{remark}
 
 \subsection{Universality} \label{ssec: universality}
-\lipsum[1]
-% \lipsum[3]
+Universality refers to the idea that certain phenomena or behaviors are independent of the specific details of a system, and these phenomena are governed by more basic physical principles or underlying symmetries of the system.
+
+\noindent There are multiple scenarios in which we get this universality from the nature:
+\begin{description}
+    \item[\normalfont\sffamily \uline{Quantum Computing:}] A specific set of quantum gates can efficiently simulate any other quantum circuit, and this set is called the universal gates. So this feature makes quantum computers universal as their behavior is the same, independent of the specific details.
+
+    \item[\normalfont\sffamily \uline{Statistical Mechanics:}] The distribution of particle velocities in a gas, as described by the Maxwell-Boltzmann distribution, is universal for classical gases, independent of the specific nature of the particles.
+\end{description}
+
+Cellular automata are universal by definition as they evolve under a predefined rule (or local transition function) irrespective of their initial state and the time step at which we apply the evolution.
 
 \section{Quantum Cellular Automata}
 R. P. Feynman introduced the idea of Quantum Cellular Automata with a vision that it can be used to simulate `Quantum Systems' as we don't have a classical analog of many quantum phenomena. In \cite{Watrous1995}, he has proven that QCAs are an alternative paradigm of quantum computers. They have shown QCAs to be universal, implying they could efficiently simulate a quantum Turing machine.
@@ -256,25 +264,29 @@ If we look at the definition, it becomes evident that locality here refers to \v
     \noindent Can we discretize whole physics is a nontrivial and exciting question on its own.
 \end{moral}
 
-\subsection{An example of QCA}
+\subsection[An example of QCA]{An example of QCA \cite{Farrelly2019}}\label{ssec:initial-rqc}
 
 For a typical quantum system (not a QCA), the dynamics is determined by the Schr\"odinger equation. However, our systems are defined on discrete spacetime, so there is no corresponding Schr\"odinger equation. So, we work with unitary operators that evolve the state every time step.
-\pagebreak
 
 Take a discrete line of qubits with position labelled by \(x \in \qty{0,~1,~2,\dots,N-1}\), where \(N\) is even. Consider the `depth-two' circuit of unitary operators; say, the unitary operator \(V\) acts on two qubits at a time named \(2 n\) and \(2 n - 1\). The unitary operator \(W\) acts on two qubits named \(2n+1\) and \(2n\) (see \cref{fig:qca-example}).
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.6\textwidth]{qca-example.png}
-    \caption{A simple example of a QCA unitary. The yellow boxes represent qubits, while the red and blue rectangles represent the two-qubit local unitaries that implement the dynamics over one timestep.}
+    \caption{A simple example of a QCA unitary.}
     \label{fig:qca-example}
 \end{figure} \noindent
-
+The yellow boxes represent qubits, while the red and blue rectangles represent the two-qubit local unitaries that implement the dynamics over one timestep.\\
+So, the unitary operator for this `depth-two' circuit will be given by
+\begin{equation*}
+    U = \prod_{n} V_{2n, ~ 2n-1} \prod_{m} W_{2m-1, ~2m}
+\end{equation*}
+The order of application of these unitary operators doesn't matter as they commute.
 
 
 \chapter{Random Quantum Circuits}
 
-As we know, discrete quantum circuits are good examples of QCAs. In \cite{Fisher2023}, they have extended this idea of quantum circuits as QCAs to incorporate an element of randomness into the local unitary gates (or operations). They also included measurements of quantum circuits (which are irreversible and non-local). This kind of quantum circuit is known as ``Random Quantum Circuit (RQC).''
+Discrete quantum circuits are good examples of QCAs (see \cref{ssec:initial-rqc}). In \cite{Fisher2023}, they have extended this idea of quantum circuits as QCAs to incorporate an element of randomness into the local unitary gates (or operations). They also included measurements of quantum circuits (which are irreversible and non-local). This kind of quantum circuit is known as ``Random Quantum Circuit (RQC).''
 
 This discussion will use a simple discrete-time model for many-body quantum systems. This model's lattice of spins (qubits) evolves by applying local unitary gates and projective measurements. This discrete-time structure can be seen as an example of `\vocab{Totterization}' of a continuous-time Hamiltonian evolution \(\qty[\ie ~ e^{i \hat{H} t / \hslash}]\), assuming the time-step to be finite \(\qty(\ie ~ t \in \Z)\), which also implies that energy is not conserved in this approach.
 
@@ -353,7 +365,7 @@ There are multiple ways to define entanglement entropy for these two sub-systems
 
 In this section, we will see what a local unitary operator is in light of quantum circuits and what a projective measurement is. Then, we will work out a discrete-time evolution of a four-qubit system under this local unitary operator and projective measurement numerically.
 
-\subsection{Basics of Quantum Computer -- for a single qubit}
+\subsection{Basics of Quantum Computer -- for a single qubit}\label{ssec:quantum-computer}
 For a single qubit, we have a finite state space \(\Sigma = \qty{0, 1}\), so we can infer that Hilbert space \(\H\) for this system is 2-dimensional. The state set can be seen as eigenvalues of a Hermitian operator (to be precise, a Pauli matrix) \(Z\). With these assumptions, we can define the eigenbasis for this Hilbert space \(\H\) as
 \begin{equation}
     \B_Z = \qty{\ku = \ket{\uparrow} = \mqty(1 \\ 0),~ \kd= \ket{\downarrow} = \mqty(0 \\ 1)}
@@ -725,7 +737,7 @@ Fidelity can be interpreted in many different ways:
     The angle is non-negative, symmetric in its inputs, and is equal to zero if and only if $\psi = \phi$. This follows triangle inequality, which implies this can be used as a metric for our interested space.
 \end{remark}
 
-\subsection{Use of Fidelity as a measure of memory}
+\subsection{Use of Fidelity as a measure of memory}\label{ssec:fidelity}
 
 Consider we encode information in the initial state for our RQC, and now we want to know how fast (or slow) our data gets lost in the quantum circuit. For the same, we can answer this question with the help of fidelity. Let's prepare an initial state, say
 \begin{equation*}
@@ -825,34 +837,88 @@ We can see these RQCs have a periodic nature for the initial states. Periodicity
 
 \section{Operator Spread -- Diffusion of expectation value}
 
+In \cref{ssec:fidelity}, we have quantified a physical quantity named ``Fidelity'', which measures an RQC's memory. Now, let's focus on the problem of how well an RQC transmits information.
+
+Consider we encoded some classical information in the expectation value of an operator for a quantum system. So, we want to find the transmission of the expectation value of that operator through the whole system.
+\begin{definition}[Expectation Value]
+    The expectation value is the probabilistic expected value of a measurement of a quantum state.
+
+    \noindent Consider an operator \(\mathcal{O}\) defined on a Hilbert space \(\H\) corresponding to a quantum system. The expectation value is defined as
+    \begin{equation}
+        \expval{\mathcal{O}}_{\psi} = \ev**{\mathcal{O}}{\psi}
+    \end{equation}
+    for any normalized quantum state \(\ket{\psi} \in \H\).
+\end{definition}
+
+Consider a quantum many-body system composed of 8 qubits, evolving through time under the \(CH\) gate arranged in brickwork fashion. In this case, our classical information is encoded by operator \(S_Z\).
+\begin{equation*}
+    S_Z = \mqty(1 & 0 \\ 0 & -1)
+\end{equation*}
+For transmission purposes, say at site 4 (\ie 4\textsuperscript{th} qubit), the expectation value of this operator is non-zero (= 1), and at all other sites, it is zero. We have to construct an initial state that satisfies all these properties, and the easiest state is
+\begin{equation*}
+    \ket{\psi} = \kr \otimes \kl \otimes \kl \otimes \ku \otimes \kr \otimes \kl \otimes \kr \otimes \kl
+\end{equation*}
+Now, if we look at the corresponding quantum circuit schematic
+\begin{figure}[H]
+    \[
+        \Qcircuit @C=2em @R=2em {
+        & \lstick{\kr} & \ctrl{1}    & \qw      & \ctrl{1}    & \qw      & \ctrl{1}    & \qw      & \rstick{\cdots} \qw \\
+        & \lstick{\kl} & \gate{H} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \rstick{\cdots} \qw \\
+        & \lstick{\kl} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \gate{H} & \rstick{\cdots} \qw \\
+        & \lstick{\ku} & \gate{H} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \rstick{\cdots} \qw \\
+        & \lstick{\kr} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \gate{H} & \rstick{\cdots} \qw \\
+        & \lstick{\kl} & \gate{H} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \rstick{\cdots} \qw \\
+        & \lstick{\kr} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \gate{H} & \ctrl{1}    & \gate{H} & \rstick{\cdots} \qw \\
+        & \lstick{\kl} & \gate{H} & \qw      & \gate{H} & \qw      & \gate{H} & \qw      & \rstick{\cdots} \qw
+        }
+    \]
+    \caption{RQC with \(CH\) as pairwise operator with initial state $\ket{\psi}$}
+    \label{fig:spread-circuit}
+\end{figure}
+
+Let's create a heatmap plot that shows the flow of the expectation value of the \(S_Z\) operator with flowing time \(\tau\). With the different colors of the heatmap, we can deduce the direction of transmission and even speed.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{spread-Sz.png}
-    \caption{Hello}
+    \caption{Heatmeat showing the spread of the information which is stored in qubit four at time \(\tau = 0\).}
     \label{fig:spread}
-\end{figure} \noindent
+\end{figure}
 
+\subsection{Observation and Conclusion}
+With the heat map plot, we can deduce the following properties of this system:
+\begin{enumerate}
+    \item For qubit one, operator \(S_Z\) has an expectation value of zero, which implies there is no gain of information by qubit one.
 
-% \chapter{Conclusion}
+    \item For qubits two to seven, the expectation value of operator \(S_Z\) has increased after the first generation. However, there are multiple instances where the value also touches zero, implying these qubits get information but very superficially. Qubits get the information but cannot store it for long.
+
+    \item For qubit eight, we see a continuous band of dark green color, implying a very high expectation value of operator \(S_Z\), indicating that information has traveled from qubit four to eight and gets stored there.
+\end{enumerate}
+
+From these properties, we can imply that the information encoded in qubit four has traveled to eight, spreading information in bits and pieces to qubits two to seven, suggesting that the spread is constant and then it just stays there.
+
 
 \appendix
 
-\chapter{Notations}
+\chapter{Quantum Computers}
 
 \section{Quantum Gates}
+
+In \cref{ssec:quantum-computer}, we have gone through a few quantum gates. Now, we will look at all the quantum logic gates.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{Quantum_Logic_Gates.png}
-    \caption{Quantum Logic Gates}
+    \includegraphics[width=0.85\textwidth]{Quantum_Logic_Gates.png}
+    \caption[Table of all quantum logic gates]{Table of all quantum logic gates\protect\footnotemark}
     \label{fig:quantum-logic-gates}
-\end{figure} \noindent
-
-
-\section{Subscript scheme for gates}
+\end{figure}
+\footnotetext{\url{https://en.wikipedia.org/wiki/Quantum_logic_gate}}
 
 \chapter{Code}\label{appendix:code}
 
+\noindent This chapter contains all the codes used to generate the graphs or numerical results.
+
 \section[Classical Cellular Automata]{Cellular Automata}
+
+This section contains the code used to generate the heatmap diagram for CA named rule-110.
 \lstinputlisting[language=julia, caption={Generating Spacetime diagram of CA \texttt{rule 110}}, label={lst:rule110}]{./codes/rule-110.jl}
 
 \section{Toy example}
@@ -868,6 +934,8 @@ We can see these RQCs have a periodic nature for the initial states. Periodicity
 \lstinputlisting[language=julia, caption={Plotting fidelity vs increasing generations}, label={lst:fidelity}]{./codes/fidelity.jl}
 
 \section{Operator Spread}
+
+\lstinputlisting[language=julia, caption={Spread of expectation value of operator \(Z\)}, label={lst:spread}]{./codes/spread.jl}
 
 \backmatter\printbibliography[heading=bibintoc, title=Bibliography]
 

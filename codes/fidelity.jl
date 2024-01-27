@@ -1,4 +1,4 @@
-using Plots, LinearAlgebra, QuantumInformation, LaTeXStrings, Latexify;
+using Plots, LinearAlgebra, QuantumInformation, LaTeXStrings;
 pgfplotsx();
 
 u, d = ket(1, 2), ket(2, 2);
