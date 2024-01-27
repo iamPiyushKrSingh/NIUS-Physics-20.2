@@ -1,10 +1,7 @@
 using Plots;
-pgfplotsx();
 
-# Rule 110
 rule = Dict([0, 0, 0] => 0, [0, 0, 1] => 1, [0, 1, 0] => 1, [0, 1, 1] => 1, [1, 0, 0] => 0, [1, 0, 1] => 1, [1, 1, 0] => 1, [1, 1, 1] => 0)
 
-# Function which calculates next generation
 function next_generation(state)
     new_state = zeros(Int, length(state))
     for i in 2:length(state)-1
@@ -14,7 +11,6 @@ function next_generation(state)
     return new_state
 end
 
-# Generates a matrix which contains all the generations
 function generate_automaton(generations, initial_state)
     automaton = zeros(Int, generations, length(initial_state))
     automaton[1, :] = initial_state
@@ -24,17 +20,22 @@ function generate_automaton(generations, initial_state)
     return automaton
 end
 
-# Initial Steps
 initial_state = zeros(Int, 101)
 initial_state[100] = 1
+
 # Generate the Rule 110 cellular automaton with 100 time steps
 generations = 100
 automaton = generate_automaton(generations, initial_state);
 
 # Plot the cellular automaton
 p = heatmap(automaton, c=:cividis, xlabel="Cell Index", ylabel="Time Steps", cbar=false)
-plot!(size=(900, 600), guidefontsize=20, tickfontsize=15, background_color=:transparent)
+plot!(
+    # size=(0, 550),
+    # guidefontsize=20,
+    # tickfontsize=15,
+    dpi=300,
+    background_color=:transparent,
+    fontfamily="Computer Modern"
+)
 savefig(p, "rule110_cellular_automaton.png")
 display(p)
-
-

@@ -183,7 +183,7 @@ Before giving a formal definition, let's look at an example:
 \end{definition}
 
 % There are a few unique characteristics of this local transition function \(f\). Consider a cell \(x \in L\)
-To better understand this local transition function \(f\), consider a cell \(x \in L\). This function takes the state of the neighbours of \(x\) as the argument, which is indexed by the set \(\mathcal{N}\) at the current time \(t \in \Z\) to spit out the state of cell $x$ at time $t + 1$.
+To better understand this local transition function \(f\), consider a cell \(x \in L\). This function takes the state of the neighbors of \(x\) as the argument, which is indexed by the set \(\mathcal{N}\) at the current time \(t \in \Z\) to spit out the state of cell $x$ at time $t + 1$.
 
 \noindent This observation points us towards two important properties of cellular automata that will help us understand why CAs are very helpful in simulating certain systems:
 
@@ -211,11 +211,11 @@ In the definition and example, we have used a few terms; now we will define them
 
     \item[\bfseries Configuration:] A configuration \(C\) is the concatination of all cell-states over the entire lattice \(L\) at a given time \(t\) which means that every configuration is an element of set \(\Sigma^L\).
 
-    \item[\bfseries Local Transition Function:] We know time is also discrete in our system (with a predefined time step). We use a local transition function \(f\) that defines the state of every cell after each time evolution. We refer to this function as a local function, as it only takes the states of the `neighbouring' cells as an argument.
+    \item[\bfseries Local Transition Function:] We know time is also discrete in our system (with a predefined time step). We use a local transition function \(f\) that defines the state of every cell after each time evolution. We refer to this function as a local function, as it only takes the states of the `neighboring' cells as an argument.
 
-    \item[\bfseries Neighbourhood Scheme:] As we have defined, the outcome of our local function at any cell \(i\) depends on the set of cell-states of neighbouring cells. This set is defined by the neighbourhood scheme \(\mathcal{N}\) on cellular automata.
+    \item[\bfseries Neighbourhood Scheme:] As we have defined, the outcome of our local function at any cell \(i\) depends on the set of cell-states of neighboring cells. This set is defined by the neighborhood scheme \(\mathcal{N}\) on cellular automata.
 
-    \item[\bfseries Global Function:] For a given lattice \(L\) (with a defined neighbourhood scheme), the local transition function \(f\) imposes a global transition function \(F\) on the set of all possible configurations. This global function determines the \emph{space}/\emph{time} behavior of the cellular automaton on an initial configuration.
+    \item[\bfseries Global Function:] For a given lattice \(L\) (with a defined neighborhood scheme), the local transition function \(f\) imposes a global transition function \(F\) on the set of all possible configurations. This global function determines the \emph{space}/\emph{time} behavior of the cellular automaton on an initial configuration.
 \end{list}
 
 \subsection{Locality} \label{ssec: locality}
@@ -225,14 +225,51 @@ In physics, locality implies we are talking about the \impt{Principle of Localit
 
 Einstein postulated that causal influence couldn't be transmitted between two points faster than the speed of light \(c\), in the \vocab{Special Theory of Relativity}, which means that if two points are spacelike separated, they can't influence each other. % This limit on speed also relates to the locality and causality
 
-In the context of cellular automata, we know that the state of a cell is only influenced by the states of finite neighbours (decided by neighbourhood scheme). Since the state of any cell is influenced by its surroundings, we can say that the cellular automata theory is local.
+In the context of cellular automata, we know that the state of a cell is only influenced by the states of finite neighbors (decided by neighborhood scheme). Since the state of any cell is influenced by its surroundings, we can say that the cellular automata theory is local.
+
+\begin{remark}[Relation between locality and relativistic causality]
+    Causality means an effect can only occur from a cause in the past light cone of that event. Similarly, a cause can only affect an event in the future light cone.
+
+    The requirement that causal influences cannot propagate faster than the speed of light ensures that physical interactions remain local, implying distant events cannot have instantaneous effects on each other.
+\end{remark}
+
 \subsection{Universality} \label{ssec: universality}
+\lipsum[1]
 % \lipsum[3]
 
 \section{Quantum Cellular Automata}
-R. P. Feynman introduced the idea of Quantum Cellular Automata with a vision that it can be used to simulate `Quantum Physics' as we don't have a classical analog of many quantum phenomena. In \cite{Watrous1995}, he has proven that QCAs are an alternative paradigm of quantum computers. They have shown QCAs to be universal, implying they could efficiently simulate a quantum Turing machine.
+R. P. Feynman introduced the idea of Quantum Cellular Automata with a vision that it can be used to simulate `Quantum Systems' as we don't have a classical analog of many quantum phenomena. In \cite{Watrous1995}, he has proven that QCAs are an alternative paradigm of quantum computers. They have shown QCAs to be universal, implying they could efficiently simulate a quantum Turing machine.
 
-This demonstration showed that QCAs are very important for quantum computers, so many have tried to formulate a theory. But there was an enormous challenge in front of the scientists: after some local function has updated one cell, we will lose the information about the state of the cell at time \(t\) as we require it for updating other cells. So somehow, we have to clone the state of this cell to some other cell, but by the \vocab{no-cloning theorem}, it is simply impossible.
+This demonstration showed that QCAs are very important for quantum computers, so many have tried to formulate a theory. But there was an enormous challenge in front of the scientists: after some local function has updated one cell, we will lose the information about the state of the cell at time \(t\) as we require it for updating other cells. So somehow, we have to clone the state of this cell to some other cell, but by the \vocab{no-cloning theorem}, it is simply impossible.\\
+
+Werner and Schumacher (in \cite{Werner2004}) gave an axiomatic definition for QCAs to avoid these theoretical challenges. Farrelly in \cite{Farrelly2019} restated the definition as follows:
+
+\begin{definition}[Quantum Cellular Automata]
+    A Quantum Cellular Automaton is a spatial lattice \(L = \Z^d\), with a quantum system on each lattice point \(x \in L\) and evolves over discrete timesteps via some unitary operators that are locality preserving.
+\end{definition}
+
+If we look at the definition, it becomes evident that locality here refers to \vocab{relativistic causality}. As we have defined our system on a discrete spacetime, we have assumed the maximum propagation speed of information. This definition guarantees locality; combined with unitarity, we get a QCA.
+
+\begin{moral}
+    We claim to simulate physics with these discrete spacetime systems in this discussion. However, all theoretical physics works with continuous spacetime.
+
+    \noindent Can we discretize whole physics is a nontrivial and exciting question on its own.
+\end{moral}
+
+\subsection{An example of QCA}
+
+For a typical quantum system (not a QCA), the dynamics is determined by the Schr\"odinger equation. However, our systems are defined on discrete spacetime, so there is no corresponding Schr\"odinger equation. So, we work with unitary operators that evolve the state every time step.
+\pagebreak
+
+Take a discrete line of qubits with position labelled by \(x \in \qty{0,~1,~2,\dots,N-1}\), where \(N\) is even. Consider the `depth-two' circuit of unitary operators; say, the unitary operator \(V\) acts on two qubits at a time named \(2 n\) and \(2 n - 1\). The unitary operator \(W\) acts on two qubits named \(2n+1\) and \(2n\) (see \cref{fig:qca-example}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.6\textwidth]{qca-example.png}
+    \caption{A simple example of a QCA unitary. The yellow boxes represent qubits, while the red and blue rectangles represent the two-qubit local unitaries that implement the dynamics over one timestep.}
+    \label{fig:qca-example}
+\end{figure} \noindent
+
 
 
 \chapter{Random Quantum Circuits}
@@ -765,14 +802,25 @@ And we vary our RQC as follows:
           \end{figure}
 \end{enumerate}
 
+\subsubsection{Observations \& Conclusion}
 We can observe the following properties of these quantum circuits from these plots:
 \begin{itemize}
     \item There are multiple instances where the fidelity is one other than for \(\tau = 0\), which implies the information is not entirely lost in these unitary transformations.
 
     \item In complement to that, we have many generations where the fidelity is zero, which means we have entirely lost the information we encoded in the initial state.
 
-    \item If we look at the graphs
+    \item If we look at the graphs, we can see the periodic nature of the fidelity. If we see each graph individually:
+          \begin{enumerate}
+              \item See \cref{fig:fidelity-CY-plot}, we can observe a periodic behavior of fidelity in the RQC with pairwise operator \(CY\). If we look at the fidelity values, we can determine the period to be \(8\) generations.
+
+              \item See \cref{fig:fidelity-CZ-plot}, we can observe a periodic behavior of fidelity in the RQC with pairwise operator \(CZ\). If we look at the fidelity values, we can determine the period to be \(4\) generations.
+
+              \item See \cref{fig:fidelity-CH-plot}, we can observe a periodic behavior of fidelity in the RQC with pairwise operator \(CH\). If we look at the fidelity values, we can determine the period to be \(48\) generations.
+          \end{enumerate}
+    \item In the case of \(CY\) and \(CH\), we can see there are secondary maxima as well, implying there are states between the full overlap and no overlap fidelities.
 \end{itemize}
+
+We can see these RQCs have a periodic nature for the initial states. Periodicity of fidelity in these circuits can be seen as an emergent property of these minimal-structured (or brickwork-structured) circuits. It also implies that these circuits have a memory of their initial states.
 
 
 \section{Operator Spread -- Diffusion of expectation value}
