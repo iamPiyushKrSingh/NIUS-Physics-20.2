@@ -685,16 +685,84 @@ Fidelity can be interpreted in many different ways:
     \begin{equation*}
         A(\psi, \phi) = \cos[-1](F(\psi, \phi)).
     \end{equation*}
-    The angle is non-negative, symmetric in its inputs, and is equal to zero if and only if $\psi = \phi$. This follows triangle inequality.
+    The angle is non-negative, symmetric in its inputs, and is equal to zero if and only if $\psi = \phi$. This follows triangle inequality, which implies this can be used as a metric for our interested space.
 \end{remark}
 
-\begin{figure}[H]
-    \centering
-    % \includegraphics[width=\textwidth]{fidelity_plot.png}
-    \resizebox{\textwidth}{!}{\input{images/fidelity_plot.tikz}}
-    \caption{Fidelity vs Number of generations}
-    \label{fig:fidelity}
-\end{figure}
+\subsection{Use of Fidelity as a measure of memory}
+
+Consider we encode information in the initial state for our RQC, and now we want to know how fast (or slow) our data gets lost in the quantum circuit. For the same, we can answer this question with the help of fidelity. Let's prepare an initial state, say
+\begin{equation*}
+    \ket{\psi} = \ket{\r \l \r \l}
+\end{equation*}
+And we vary our RQC as follows:
+\begin{enumerate}
+    \item For this system, we will use \(CY\) gate as our pairwise operator.
+          \begin{figure}[H]
+              \[
+                  \Qcircuit @C=2em @R=2em {
+                  \lstick{\kr} & \ctrl{1} & \qw      & \ctrl{1} & \qw      & \rstick{\cdots} \qw \\
+                  \lstick{\kl} & \gate{Y} & \ctrl{1} & \gate{Y} & \ctrl{1} & \rstick{\cdots} \qw \\
+                  \lstick{\kr} & \ctrl{1} & \gate{Y} & \ctrl{1} & \gate{Y} & \rstick{\cdots} \qw \\
+                  \lstick{\kl} & \gate{Y} & \qw      & \gate{Y} & \qw      & \rstick{\cdots} \qw
+                  }
+              \]
+              \caption{RQC with \(CY\) as pairwise operator with initial state $\ket{\psi}$}
+              \label{fig:fidelity-CY}
+          \end{figure}
+          Now, if we calculate the fidelity of \(\tau\)\textsuperscript{th} generation and initial state. We get
+          \begin{equation*}
+              F_{\psi}(\tau) := F(\psi_\tau, \psi) = \abs{\ip{\psi_\tau}{\psi}}^2 \qquad \qquad \ket{\psi_\tau} = U(\tau; 0) \ket{\psi}
+          \end{equation*}
+
+          If plot Fidelity \(F_{\psi}(\tau)\) vs number of generation for \(0 \le \tau \le 100\), we get the following plot.
+          \begin{figure}[H]
+              \centering
+              \resizebox{\textwidth}{!}{\input{images/fidelity_plot_CY.tikz}}
+              \caption{Fidelity \(F_{\psi}(\tau)\) vs Number of generations \(\tau\) [for $CY$ operator]}
+              \label{fig:fidelity-CY-plot}
+          \end{figure}
+
+    \item For this system, we will use \(CZ\) gate as our pairwise operator.
+          \begin{figure}[H]
+              \[
+                  \Qcircuit @C=2em @R=2em {
+                  \lstick{\kr} & \ctrl{1} & \qw      & \ctrl{1} & \qw      & \rstick{\cdots} \qw \\
+                  \lstick{\kl} & \gate{Z} & \ctrl{1} & \gate{Z} & \ctrl{1} & \rstick{\cdots} \qw \\
+                  \lstick{\kr} & \ctrl{1} & \gate{Z} & \ctrl{1} & \gate{Z} & \rstick{\cdots} \qw \\
+                  \lstick{\kl} & \gate{Z} & \qw      & \gate{Z} & \qw      & \rstick{\cdots} \qw
+                  }
+              \]
+              \caption{RQC with \(CZ\) as pairwise operator with initial state $\ket{\psi}$}
+              \label{fig:fidelity-CZ}
+          \end{figure}
+          With the circuit in \cref{fig:fidelity-CZ}, we get the following graph if all the conditions are the same as for the \(CY\) case (see \cref{fig:fidelity-CY}).
+          \begin{figure}[H]
+              \centering
+              \resizebox{\textwidth}{!}{\input{images/fidelity_plot_CZ.tikz}}
+              \caption{Fidelity \(F_{\psi}(\tau)\) vs Number of generations \(\tau\) [for $CZ$ operator]}
+              \label{fig:fidelity-CZ-plot}
+          \end{figure}
+
+    \item For this system, we will use our good old \(CH\) gate as our pairwise operator.
+          \begin{figure}[H]
+              \[
+                  \Qcircuit @C=2em @R=1.8em {
+                  \lstick{\kr} & \ctrl{1} & \qw      & \ctrl{1} & \qw      & \rstick{\cdots} \qw \\
+                  \lstick{\kl} & \gate{H} & \ctrl{1} & \gate{H} & \ctrl{1} & \rstick{\cdots} \qw \\
+                  \lstick{\kr} & \ctrl{1} & \gate{H} & \ctrl{1} & \gate{H} & \rstick{\cdots} \qw \\
+                  \lstick{\kl} & \gate{H} & \qw      & \gate{H} & \qw      & \rstick{\cdots} \qw
+                  }
+              \]
+              \caption{RQC with \(CH\) as pairwise operator with initial state $\ket{\psi}$}
+              \label{fig:fidelity-CH}
+          \end{figure}
+          \begin{figure}[H]
+              \centering
+              \resizebox{\textwidth}{!}{\input{images/fidelity_plot_CH.tikz}}
+              \caption{Fidelity \(F_{\psi}(\tau)\) vs Number of generations \(\tau\) [for $CH$ operator]}
+              \label{fig:fidelity-CH-plot}
+          \end{figure}
+\end{enumerate}
 
 
 \section{Operator Spread -- Diffusion of expectation value}
@@ -723,16 +791,6 @@ Fidelity can be interpreted in many different ways:
 
 \section{Toy example}
 
-% \begin{lstlisting}[language=Mathematica, caption={Computing matrix of CH gate}, label=]
-% Z = PauliMatrix[3];
-% H = HadamardMatrix[2];
-% Id = IdentityMatrix[4];
-% Z1 = KroneckerProduct[Z, IdentityMatrix[2]];
-% H2 = KroneckerProduct[IdentityMatrix[2], H];
-% CH = Simplify[MatrixExp[- I Pi/4 (Id-Z1).(Id-H2)]];
-% MatrixForm[CH]
-% \end{lstlisting}
-
 \lstinputlisting[language=Mathematica, caption={Computing matrix of CH gate}, label={lst:CH-mat}]{./codes/CH.txt}
 
 \lstinputlisting[language=julia, caption={Simulating the final state of toy example using matrix operations}, label={lst:toy-final}]{./codes/toy-model.jl}
@@ -742,6 +800,8 @@ Fidelity can be interpreted in many different ways:
 \section{Fidelity Calculations}
 
 \lstinputlisting[language=julia, caption={Plotting fidelity vs increasing generations}, label={lst:fidelity}]{./codes/fidelity.jl}
+
+\section{Operator Spread}
 
 \backmatter\printbibliography[heading=bibintoc, title=Bibliography]
 
