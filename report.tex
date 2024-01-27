@@ -756,6 +756,7 @@ And we vary our RQC as follows:
               \caption{RQC with \(CH\) as pairwise operator with initial state $\ket{\psi}$}
               \label{fig:fidelity-CH}
           \end{figure}
+          Considering the circuit in \cref{fig:fidelity-CH}, we get the following plot for the same,
           \begin{figure}[H]
               \centering
               \resizebox{\textwidth}{!}{\input{images/fidelity_plot_CH.tikz}}
@@ -764,8 +765,25 @@ And we vary our RQC as follows:
           \end{figure}
 \end{enumerate}
 
+We can observe the following properties of these quantum circuits from these plots:
+\begin{itemize}
+    \item There are multiple instances where the fidelity is one other than for \(\tau = 0\), which implies the information is not entirely lost in these unitary transformations.
+
+    \item In complement to that, we have many generations where the fidelity is zero, which means we have entirely lost the information we encoded in the initial state.
+
+    \item If we look at the graphs
+\end{itemize}
+
 
 \section{Operator Spread -- Diffusion of expectation value}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{spread-Sz.png}
+    \caption{Hello}
+    \label{fig:spread}
+\end{figure} \noindent
+
 
 % \chapter{Conclusion}
 
